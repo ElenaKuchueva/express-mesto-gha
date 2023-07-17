@@ -1,6 +1,7 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 # Проект Mesto фронтенд + бэкенд
 
+[Сcылка на проект на GitHub Pages](https://elenakuchueva.github.io/mesto/index.html).  
 
 ## Директории
 
