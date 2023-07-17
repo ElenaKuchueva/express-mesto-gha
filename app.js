@@ -1,10 +1,11 @@
 const express = require('express');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 const mongoose = require('mongoose');
-const aboutUserRouter = require('./routes/users.js');
-const aboutCardRouter = require('./routes/cards.js');
-const {STATUS_NOT_FOUND} = require('./utils/err.js')
+const aboutUserRouter = require('./routes/users');
+const aboutCardRouter = require('./routes/cards');
+const { STATUS_NOT_FOUND } = require('./utils/err');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
@@ -12,7 +13,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '64b5150b32c292829a7f54b9'
+    _id: '64b5150b32c292829a7f54b9',
   };
   next();
 });
@@ -24,5 +25,5 @@ app.use('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`)
-})
+  console.log(`App listening on port ${PORT}`);
+});
