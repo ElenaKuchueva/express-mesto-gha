@@ -4,6 +4,7 @@ const userInfo = require('../models/user');
 
 const {
   STATUS_OK,
+  STATUS_CREATED
 } = require('../errors/err');
 
 const BadRequest = require('../errors/badRequest');
@@ -101,7 +102,14 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash, // записываем хеш в базу
     }))
-    .then((user) => res.send(user))
+    .then((user) => res.status(STATUS_CREATED).send({
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+    }))
+    // .then((user) => res.send(user))
     .catch((err) => {
       if (err.code === 11000) {
         res
