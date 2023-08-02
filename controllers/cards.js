@@ -1,16 +1,16 @@
 const cardInfo = require('../models/card');
 const {
-  STATUS_OK,
   STATUS_CREATED,
 } = require('../errors/err');
 
 const BadRequest = require('../errors/badRequest');
+const Forbidden = require('../errors/Forbidden');
 const NotFound = require('../errors/notFound');
 
 module.exports.getCards = (req, res, next) => {
   cardInfo
     .find({})
-    .then((cards) => res.status(STATUS_OK).send(cards))
+    .then((cards) => res.send(cards))
     .catch(() => {
       next(new NotFound('Карточки не найдены'));
     });
@@ -31,8 +31,7 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  cardInfo
-    .findByIdAndRemove(req.params.cardId, { runValidators: true })
+  cardInfo.findById(req.params.cardId)
     .orFail(() => {
       next(new NotFound('По указанному _id карточка не найденa'));
     })
@@ -40,9 +39,12 @@ module.exports.deleteCard = (req, res, next) => {
       const owner = card.owner.toString();
       if (req.user._id === owner) {
         cardInfo.deleteOne(card)
-          .then(res.status(STATUS_OK).send(card));
+          .then(() => {
+            res.send(card);
+          })
+          .catch(next);
       } else {
-        res.status(403).send({ message: 'Эта карточка другого пользователя' });
+        throw new Forbidden('Эта карточка другого пользователя');
       }
     })
     .catch((err) => {
@@ -64,7 +66,7 @@ module.exports.addLikeCard = (req, res, next) => {
     .orFail(() => {
       next(new NotFound('По указанному _id карточка не найденa'));
     })
-    .then((user) => res.status(STATUS_OK).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
@@ -84,7 +86,7 @@ module.exports.removelikeCard = (req, res, next) => {
     .orFail(() => {
       next(new NotFound('По указанному _id карточка не найденa'));
     })
-    .then((user) => res.status(STATUS_OK).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
